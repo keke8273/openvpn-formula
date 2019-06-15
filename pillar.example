@@ -170,7 +170,7 @@ openvpn:
         -----BEGIN OpenVPN Static key V1-----
         ...
         -----END OpenVPN Static key V1-----
-    mysitetoste2:
+    mysitetosite2:
       remote:
         - 'myremote.mydomain 1194 udp'
       dev: myinterfacename
@@ -287,7 +287,7 @@ openvpn:
       # This option must be used on a client which is connecting to a
       # multi-client server. It indicates to OpenVPN that it should accept
       # options pushed by the server, provided they are part of the legal
-      # set of pushable options 
+      # set of pushable options
 
   ifconfig_pool_persist:
     ipp.txt:
