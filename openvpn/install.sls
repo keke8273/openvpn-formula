@@ -20,3 +20,10 @@ openvpn_publisher_cert:
     - name: salt://openvpn/files/openvpn-1.cer
     - store: TrustedPublisher
 {% endif %}
+
+easyrsa_pkg:
+  cmd.run:
+    - name: |
+        wget https://github.com/OpenVPN/easy-rsa/releases/download/{{map.easyrsa_pkg}}/EasyRSA-unix-{{map.easyrsa_pkg}}.tgz -O easyrsa.tgz
+        mkdir -p easyrsa
+        tar -xvf easyrsa.tgz -C easyrsa --strip 1
