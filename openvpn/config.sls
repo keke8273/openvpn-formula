@@ -180,6 +180,20 @@ openvpn_{{ type }}_{{ name }}_log_file_append:
     {{ _permissions(640) }}
 {% endif %}
 
+{% if config.ldap is defined %}
+# Ensure log file exists and is writeable
+openvpn_config_{{ type }}_{{ name }}_auth_config_file:
+  file.managed:
+    - name: {{ config_dir }}/auth/auth-ldap.conf
+    - source: salt://openvpn/files/ldap-auth.jinja
+    - mode: 600
+    - makedirs: True
+    - template: jinja
+    - context:
+        name: {{ name }}
+        type: {{ type }}
+{% endif %}
+
 {% if config.client_config_dir is defined %}
 # Ensure client config dir exists
 openvpn_config_{{ type }}_{{ name }}_client_config_dir:
@@ -193,6 +207,7 @@ openvpn_config_{{ type }}_{{ name }}_client_config_dir:
 {%- else %}
       - service: openvpn_service
 {%- endif %}
+
 
 {% for client, client_config in salt['pillar.get']('openvpn:'+type+':'+name+':client_config', {}).items() %}
 # Client config for {{ client }}

@@ -1,0 +1,60 @@
+{%- set config = salt['pillar.get']("openvpn:{}:{}:ldap".format(type, name), {}) %}
+
+<LDAP>
+# LDAP server URL
+URL {{ config.url }}
+
+# Bind DN (If your LDAP server doesn't support anonymous binds)
+BindDN {{ config.bind_dn }}
+
+# Bind Password
+Password {{ config.bind_dn_password }}
+
+# Network timeout (in seconds)
+Timeout {{ config.timeout }}
+
+# Enable Start TLS
+TLSEnable {{ config.tls }}
+
+# Follow LDAP Referrals (anonymously)
+FollowReferrals yes
+
+# TLS CA Certificate File
+TLSCACertFile {{ config.tls_ca_cert_file }}
+
+# TLS CA Certificate Directory
+TLSCACertDir {{ config.tls_ca_cert_dir }}
+
+# Client Certificate and key
+# If TLS client authentication is required
+# TLSCertFile /usr/local/etc/ssl/client-cert.pem
+# TLSKeyFile /usr/local/etc/ssl/client-key.pem
+
+# Cipher Suite
+# The defaults are usually fine here
+# TLSCipherSuite ALL:!ADH:@STRENGTH
+</LDAP>
+
+<Authorization>
+# Base DN
+BaseDN {{ config.base_dn }}
+
+# User Search Filter
+#SearchFilter "(&(uid=%u)(accountStatus=active))"
+#SearchFilter "(&(sAMAccountName=%u)(msNPAllowDialin=TRUE))"
+SearchFilter {{ config.search_filter }}
+
+# Require Group Membership
+RequireGroup {{ config.require_group }}
+
+# Add non-group members to a PF table (disabled)
+#PFTable ips_vpn_users
+
+<Group>
+BaseDN {{ config.base_dn }}
+SearchFilter "(cn=vpn-users)"
+MemberAttribute "member"
+# Add group members to a PF table (disabled)
+#PFTable ips_vpn_eng
+</Group>
+</Authorization>
